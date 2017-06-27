@@ -8,7 +8,7 @@ class Accompanist implements JsonSerializable {
 
   protected $name = '';
   protected $description = '';
-  protected $type = 'project';
+  protected $type = '';
   protected $authors = [];
   protected $repositories;
   protected $config;
@@ -323,11 +323,11 @@ class Accompanist implements JsonSerializable {
   /**
    * @param string $folder
    */
-  function generate($folder) {
-    @mkdir($folder);
+  function generate($folder = '') {
+    if(!empty($folder)) {
+      @mkdir($folder);
+    }
+
     file_put_contents($folder . '/composer.json', $this->generateJSON());
-    @mkdir($folder . '/scripts');
-    @mkdir($folder . '/scripts/composer');
-    copy('templates/ScriptHandler.php', $folder . '/scripts/composer/ScriptHandler.php');
   }
 }
