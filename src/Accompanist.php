@@ -53,6 +53,9 @@ class Accompanist implements JsonSerializable {
     $this->extra = new \stdClass();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function jsonSerialize() {
     return [
       'name' => $this->name,
@@ -248,7 +251,7 @@ class Accompanist implements JsonSerializable {
   }
 
   /**
-   * @return array
+   * @return \stdClass
    */
   public function getRequire() {
     return $this->require;
@@ -256,6 +259,7 @@ class Accompanist implements JsonSerializable {
 
   /**
    * @param string $require
+   * @param string $version
    */
   public function addRequire($require, $version = '*') {
     $this->require->$require = $version;
@@ -273,7 +277,7 @@ class Accompanist implements JsonSerializable {
   }
 
   /**
-   * @return array
+   * @return \stdClass
    */
   public function getRequireDev() {
     return $this->requireDev;
@@ -298,7 +302,7 @@ class Accompanist implements JsonSerializable {
   }
 
   /**
-   * @return array
+   * @return \stdClass
    */
   public function getConflict() {
     return $this->conflict;
@@ -388,7 +392,7 @@ class Accompanist implements JsonSerializable {
   }
 
   /**
-   * @return array
+   * @return \stdClass
    */
   public function getAutoload() {
     return $this->autoload;
@@ -404,6 +408,11 @@ class Accompanist implements JsonSerializable {
     return $this;
   }
 
+  /**
+   * @param string $name
+   *
+   * @return $this
+   */
   public function removeAutoload($name) {
     unset($this->autoload->$name);
 
@@ -411,14 +420,15 @@ class Accompanist implements JsonSerializable {
   }
 
   /**
-   * @return mixed
+   * @return \stdClass
    */
   public function getAutoloadDev() {
     return $this->autoloadDev;
   }
 
   /**
-   * @param mixed $autoloadDev
+   * @param string $name
+   * @param mixed $value
    */
   public function addAutoloadDev($name, $value) {
     $this->autoloadDev->$name = $value;
@@ -426,6 +436,11 @@ class Accompanist implements JsonSerializable {
     return $this;
   }
 
+  /**
+   * @param string $name
+   *
+   * @return \Accompanist\Accompanist
+   */
   public function removeAutoloadDev($name) {
     unset($this->autoloadDev->$name);
 
@@ -433,7 +448,7 @@ class Accompanist implements JsonSerializable {
   }
 
   /**
-   * @return array
+   * @return \stdClass
    */
   public function getRepositories() {
     return $this->repositories;
@@ -441,7 +456,10 @@ class Accompanist implements JsonSerializable {
 
   /**
    * @param string $name
+   * @param string $type
    * @param string $url
+   *
+   * @return \Accompanist\Accompanist
    */
   public function addRepository($name, $type, $url) {
     $this->repositories->$name = ['type' => $type, 'url' => $url];
@@ -450,7 +468,9 @@ class Accompanist implements JsonSerializable {
   }
 
   /**
+   * @param string $name
    *
+   * @return \Accompanist\Accompanist
    */
   public function removeRepository($name) {
     unset($this->repositories[$name]);
@@ -459,7 +479,7 @@ class Accompanist implements JsonSerializable {
   }
 
   /**
-   * @return array
+   * @return \stdClass
    */
   public function getConfig() {
     return $this->config;
@@ -475,14 +495,17 @@ class Accompanist implements JsonSerializable {
   }
 
   /**
-   * @return array
+   * @return \stdClass
    */
   public function getScripts() {
     return $this->scripts;
   }
 
   /**
-   * @param array $scripts
+   * @param string $name
+   * @param string $path
+   *
+   * @return \Accompanist\Accompanist
    */
   public function addScript($name, $path) {
     $this->scripts->$name = $path;
@@ -491,7 +514,9 @@ class Accompanist implements JsonSerializable {
   }
 
   /**
-   * @param array $scripts
+   * @param string $name
+   *
+   * @return \Accompanist\Accompanist
    */
   public function removeScript($name) {
     unset($this->scripts->$name);
@@ -500,14 +525,16 @@ class Accompanist implements JsonSerializable {
   }
 
   /**
-   * @return array
+   * @return \stdClass
    */
   public function getExtra() {
     return $this->extra;
   }
 
   /**
-   * @param array $extra
+   * @param \stdClass $extra
+   *
+   * @return \Accompanist\Accompanist
    */
   public function setExtra($extra) {
     $this->extra = $extra;
