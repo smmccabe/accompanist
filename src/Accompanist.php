@@ -8,29 +8,47 @@ class Accompanist implements JsonSerializable {
 
   protected $name = '';
   protected $description = '';
+  protected $version = '';
   protected $type = '';
+  protected $keywords = '';
+  protected $homepage = '';
+  protected $time = '';
+  protected $license = '';
   protected $authors = [];
-  protected $repositories;
-  protected $config;
+  protected $support;
   protected $require;
   protected $requireDev;
   protected $conflict;
+  protected $replace;
+  protected $provide;
+  protected $suggest;
+  protected $autoload;
+  protected $autoloadDev;
   protected $minimumStability = 'dev';
   protected $preferStable = TRUE;
-  protected $autoload;
+  protected $repositories;
+  protected $config;
   protected $scripts;
   protected $extra;
+  protected $bin;
+  protected $archive;
+  protected $nonFeatureBranches;
+  protected $featureBranches;
 
   function __construct($name, $description = '') {
     $this->setName($name);
     $this->setDescription($description);
 
-    $this->repositories = new \stdClass();
-    $this->config = new \stdClass();
     $this->require = new \stdClass();
     $this->requireDev = new \stdClass();
     $this->conflict = new \stdClass();
+    $this->replace = new \stdClass();
+    $this->provide = new \stdClass();
+    $this->suggest = new \stdClass();
     $this->autoload = new \stdClass();
+    $this->autoloadDev = new \stdClass();
+    $this->repositories = new \stdClass();
+    $this->config = new \stdClass();
     $this->scripts = new \stdClass();
     $this->extra = new \stdClass();
   }
@@ -39,18 +57,32 @@ class Accompanist implements JsonSerializable {
     return [
       'name' => $this->name,
       'description' => $this->description,
+      'version' => $this->version,
       'type' => $this->type,
+      'keywords' => $this->keywords,
+      'homepage' => $this->homepage,
+      'time' => $this->time,
+      'license' => $this->license,
       'authors' => $this->authors,
-      'repositories' => $this->repositories,
-      'config' => $this->config,
+      'support' => $this->support,
       'require' => $this->require,
       'require-dev' => $this->requireDev,
       'conflict' => $this->conflict,
+      'replace' => $this->replace,
+      'provide' => $this->provide,
+      'suggest' => $this->suggest,
+      'autoload' => $this->autoload,
+      'autoload-dev' => $this->autoloadDev,
       'minimum-stability' => $this->minimumStability,
       'prefer-stable' => $this->preferStable,
-      'autoload' => $this->autoload,
+      'repositories' => $this->repositories,
+      'config' => $this->config,
       'scripts' => $this->scripts,
       'extra' => $this->extra,
+      'bin' => $this->bin,
+      'archive' => $this->archive,
+      'non-feature-branches' => $this->nonFeatureBranches,
+      'feature-braches' => $this->featureBranches,
     ];
   }
 
@@ -89,6 +121,22 @@ class Accompanist implements JsonSerializable {
   /**
    * @return string
    */
+  public function getVersion() {
+    return $this->version;
+  }
+
+  /**
+   * @param string $version
+   */
+  public function setVersion($version) {
+    $this->version = $version;
+
+    return $this;
+  }
+
+  /**
+   * @return string
+   */
   public function getType() {
     return $this->type;
   }
@@ -100,6 +148,73 @@ class Accompanist implements JsonSerializable {
     $this->type = $type;
 
     return $this;
+  }
+
+  /**
+   * @return string
+   */
+  public function getKeywords() {
+    return $this->keywords;
+  }
+
+  /**
+   * @param string $keywords
+   */
+  public function setKeywords($keywords) {
+    $this->keywords = $keywords;
+  }
+
+  /**
+   * @return string
+   */
+  public function getHomepage() {
+    return $this->homepage;
+  }
+
+  /**
+   * @param string $homepage
+   */
+  public function setHomepage($homepage) {
+    $this->homepage = $homepage;
+  }
+
+  /**
+   * @return string
+   */
+  public function getTime() {
+    return $this->time;
+  }
+
+  /**
+   * @param string $time
+   */
+  public function setTime($time) {
+    $this->time = $time;
+  }
+
+  /**
+   * @return string
+   */
+  public function getLicense() {
+    return $this->license;
+  }
+
+  /**
+   * @param string $license
+   *   Usually the license will be one of
+   *     Apache-2.0
+   *     BSD-2-Clause
+   *     BSD-3-Clause
+   *     BSD-4-Clause
+   *     GPL-2.0
+   *     GPL-3.0
+   *     LGPL-2.1
+   *     LGPL-3.0
+   *     MIT
+   *   And the composer spec request you stick to the above formatting.
+   */
+  public function setLicense($license) {
+    $this->license = $license;
   }
 
   /**
@@ -119,45 +234,17 @@ class Accompanist implements JsonSerializable {
   }
 
   /**
-   * @return array
+   * @return mixed
    */
-  public function getRepositories() {
-    return $this->repositories;
+  public function getSupport() {
+    return $this->support;
   }
 
   /**
-   * @param string $name
-   * @param string $url
+   * @param mixed $support
    */
-  public function addRepository($name, $type, $url) {
-    $this->repositories->$name = ['type' => $type, 'url' => $url];
-
-    return $this;
-  }
-
-  /**
-   *
-   */
-  public function removeRepository($name) {
-    unset($this->repositories[$name]);
-
-    return $this;
-  }
-
-  /**
-   * @return array
-   */
-  public function getConfig() {
-    return $this->config;
-  }
-
-  /**
-   * @param array $config
-   */
-  public function setConfig($config) {
-    $this->config = $config;
-
-    return $this;
+  public function setSupport($support) {
+    $this->support = $support;
   }
 
   /**
@@ -227,6 +314,48 @@ class Accompanist implements JsonSerializable {
   }
 
   /**
+   * @return mixed
+   */
+  public function getReplace() {
+    return $this->replace;
+  }
+
+  /**
+   * @param mixed $replace
+   */
+  public function setReplace($replace) {
+    $this->replace = $replace;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getProvide() {
+    return $this->provide;
+  }
+
+  /**
+   * @param mixed $provide
+   */
+  public function setProvide($provide) {
+    $this->provide = $provide;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getSuggest() {
+    return $this->suggest;
+  }
+
+  /**
+   * @param mixed $suggest
+   */
+  public function setSuggest($suggest) {
+    $this->suggest = $suggest;
+  }
+
+  /**
    * @return string
    */
   public function getMinimumStability() {
@@ -275,6 +404,76 @@ class Accompanist implements JsonSerializable {
     return $this;
   }
 
+  public function removeAutoload($name) {
+    unset($this->autoload->$name);
+
+    return $this;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getAutoloadDev() {
+    return $this->autoloadDev;
+  }
+
+  /**
+   * @param mixed $autoloadDev
+   */
+  public function addAutoloadDev($name, $value) {
+    $this->autoloadDev->$name = $value;
+
+    return $this;
+  }
+
+  public function removeAutoloadDev($name) {
+    unset($this->autoloadDev->$name);
+
+    return $this;
+  }
+
+  /**
+   * @return array
+   */
+  public function getRepositories() {
+    return $this->repositories;
+  }
+
+  /**
+   * @param string $name
+   * @param string $url
+   */
+  public function addRepository($name, $type, $url) {
+    $this->repositories->$name = ['type' => $type, 'url' => $url];
+
+    return $this;
+  }
+
+  /**
+   *
+   */
+  public function removeRepository($name) {
+    unset($this->repositories[$name]);
+
+    return $this;
+  }
+
+  /**
+   * @return array
+   */
+  public function getConfig() {
+    return $this->config;
+  }
+
+  /**
+   * @param array $config
+   */
+  public function setConfig($config) {
+    $this->config = $config;
+
+    return $this;
+  }
+
   /**
    * @return array
    */
@@ -314,6 +513,62 @@ class Accompanist implements JsonSerializable {
     $this->extra = $extra;
 
     return $this;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getBin() {
+    return $this->bin;
+  }
+
+  /**
+   * @param mixed $bin
+   */
+  public function setBin($bin) {
+    $this->bin = $bin;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getArchive() {
+    return $this->archive;
+  }
+
+  /**
+   * @param mixed $archive
+   */
+  public function setArchive($archive) {
+    $this->archive = $archive;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getNonFeatureBranches() {
+    return $this->nonFeatureBranches;
+  }
+
+  /**
+   * @param mixed $nonFeatureBranches
+   */
+  public function setNonFeatureBranches($nonFeatureBranches) {
+    $this->nonFeatureBranches = $nonFeatureBranches;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getFeatureBranches() {
+    return $this->featureBranches;
+  }
+
+  /**
+   * @param mixed $featureBranches
+   */
+  public function setFeatureBranches($featureBranches) {
+    $this->featureBranches = $featureBranches;
   }
 
   function generateJSON() {
