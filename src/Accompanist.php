@@ -764,12 +764,18 @@ class Accompanist implements JsonSerializable
   /**
    * @param string $folder
    */
-    public function generate($folder = '')
+    public function generate($location)
     {
-        if (!empty($folder)) {
-            @mkdir($folder);
-        }
+        if (!empty($location)) {
+            @mkdir($location);
 
-        file_put_contents($folder . '/composer.json', $this->generateJSON());
+            if (substr($location, -1) != '/') {
+                $location .= '/';
+            }
+
+            file_put_contents($location . 'composer.json', $this->generateJSON());
+        } else {
+            throw new \Exception('A location must be provided when generating a composer.json file');
+        }
     }
 }
