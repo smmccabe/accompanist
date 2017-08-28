@@ -11,7 +11,7 @@ class Accompanist implements JsonSerializable
     protected $description = '';
     protected $version = '';
     protected $type = '';
-    protected $keywords = '';
+    protected $keywords = [];
     protected $homepage = '';
     protected $time = '';
     protected $license = '';
@@ -31,10 +31,10 @@ class Accompanist implements JsonSerializable
     protected $config;
     protected $scripts;
     protected $extra;
-    protected $bin;
+    protected $bin = [];
     protected $archive;
-    protected $nonFeatureBranches;
-    protected $featureBranches;
+    protected $nonFeatureBranches = [];
+    protected $featureBranches = [];
 
     public function __construct($name, $description = '')
     {
@@ -53,6 +53,8 @@ class Accompanist implements JsonSerializable
         $this->config = new \stdClass();
         $this->scripts = new \stdClass();
         $this->extra = new \stdClass();
+        $this->archive = new \stdClass();
+        $this->support = new \stdClass();
     }
 
   /**
@@ -60,17 +62,11 @@ class Accompanist implements JsonSerializable
    */
     public function jsonSerialize()
     {
-        return [
+      $json = [
         'name' => $this->name,
         'description' => $this->description,
         'version' => $this->version,
         'type' => $this->type,
-        'keywords' => $this->keywords,
-        'homepage' => $this->homepage,
-        'time' => $this->time,
-        'license' => $this->license,
-        'authors' => $this->authors,
-        'support' => $this->support,
         'require' => $this->require,
         'require-dev' => $this->requireDev,
         'conflict' => $this->conflict,
@@ -85,11 +81,53 @@ class Accompanist implements JsonSerializable
         'config' => $this->config,
         'scripts' => $this->scripts,
         'extra' => $this->extra,
-        'bin' => $this->bin,
-        'archive' => $this->archive,
-        'non-feature-branches' => $this->nonFeatureBranches,
-        'feature-braches' => $this->featureBranches,
-        ];
+      ];
+
+      if(!empty($this->keywords)) {
+        $json['keywords'] = $this->keywords;
+      }
+
+      if(!empty($this->homepage)) {
+        $json['homepage'] = $this->homepage;
+      }
+
+      if(!empty($this->time)) {
+        $json['time'] = $this->time;
+      }
+
+      if(!empty($this->license)) {
+        $json['license'] = $this->license;
+      }
+
+      if(!empty($this->authors)) {
+        $json['authors'] = $this->authors;
+      }
+
+      if(!empty($this->support)) {
+        $json['time'] = $this->time;
+      }
+
+      if(!empty($this->extra)) {
+        $json['extra'] = $this->extra;
+      }
+
+      if(!empty($this->bin)) {
+        $json['bin'] = $this->bin;
+      }
+
+      if(!empty($this->archive)) {
+        $json['archive'] = $this->archive;
+      }
+
+      if(!empty($this->nonFeatureBranches)) {
+        $json['non-feature-branches'] = $this->nonFeatureBranches;
+      }
+
+      if(!empty($this->featureBranches)) {
+        $json['feature-braches'] = $this->featureBranches;
+      }
+
+      return $json;
     }
 
   /**
@@ -181,15 +219,27 @@ class Accompanist implements JsonSerializable
     }
 
   /**
-   * @param string $keywords
+   * @param string $keyword
    *
    * @return $this
    */
-    public function setKeywords($keywords)
+    public function addKeyword($keyword)
     {
-        $this->keywords = $keywords;
+        $this->keywords[$keyword] = $keyword;
 
         return $this;
+    }
+
+  /**
+   * @param string $keyword
+   *
+   * @return $this
+   */
+    public function removeKeyword($keyword)
+    {
+      unset($this->keywords[$keyword]);
+
+      return $this;
     }
 
   /**
