@@ -65,7 +65,6 @@ class Accompanist implements JsonSerializable
       $json = [
         'name' => $this->name,
         'description' => $this->description,
-        'version' => $this->version,
         'type' => $this->type,
         'require' => $this->require,
         'require-dev' => $this->requireDev,
