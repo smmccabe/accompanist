@@ -83,6 +83,10 @@ class Accompanist implements JsonSerializable
         'extra' => $this->extra,
       ];
 
+      if(!empty($this->version)) {
+        $json['version'] = $this->version;
+      }
+
       if(!empty($this->keywords)) {
         $json['keywords'] = $this->keywords;
       }
@@ -104,7 +108,7 @@ class Accompanist implements JsonSerializable
       }
 
       if(!empty($this->support)) {
-        $json['time'] = $this->time;
+        $json['support'] = $this->support;
       }
 
       if(!empty($this->extra)) {
