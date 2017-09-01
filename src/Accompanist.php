@@ -692,7 +692,11 @@ class Accompanist implements JsonSerializable
    */
     public function addScript($name, $path)
     {
-        $this->scripts->$name = $path;
+        if (isset($this->scripts->$name)) {
+          $this->scripts->$name[] = $path;
+        } else {
+          $this->scripts->$name = $path;
+        }
 
         return $this;
     }
