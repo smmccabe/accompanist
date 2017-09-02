@@ -695,7 +695,7 @@ class Accompanist implements JsonSerializable
         if (isset($this->scripts->$name)) {
           $this->scripts->$name[] = $path;
         } else {
-          $this->scripts->$name = $path;
+          $this->scripts->$name = [$path];
         }
 
         return $this;
@@ -721,16 +721,33 @@ class Accompanist implements JsonSerializable
         return $this->extra;
     }
 
-  /**
-   * @param \stdClass $extra
-   *
-   * @return $this
-   */
-    public function setExtra($extra)
+    /**
+     * @param string $extra
+     * @param mixed $value
+     *
+     * @return $this
+     */
+    public function addExtra($extra, $value)
     {
-        $this->extra = $extra;
+      if (isset($this->extra->$extra) && is_array($this->extra->$extra)) {
+        array_merge($this->extra->$extra, $value);
+      } else {
+        $this->extra->$extra = $value;
+      }
 
-        return $this;
+      return $this;
+    }
+
+    /**
+     * @param string $extra
+     *
+     * @return $this
+     */
+    public function removeExtra($extra)
+    {
+      unset($this->extra->$extra);
+
+      return $this;
     }
 
   /**
@@ -836,3 +853,4 @@ class Accompanist implements JsonSerializable
         }
     }
 }
+
