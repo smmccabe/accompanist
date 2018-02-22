@@ -2,7 +2,7 @@
     "name": "smmccabe/accompanist",
     "description": "A PHP API for generating dynamic composer.json files",
     "type": "library",
-    "license": "GPL-2.0-or-later",
+    "license": "GPL-3.0-or-later",
     "authors": [
         {
             "name": "Shawn McCabe",
