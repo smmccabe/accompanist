@@ -62,75 +62,75 @@ class Accompanist implements JsonSerializable
    */
     public function jsonSerialize()
     {
-      $json = [
-        'name' => $this->name,
-        'description' => $this->description,
-        'type' => $this->type,
-        'require' => $this->require,
-        'require-dev' => $this->requireDev,
-        'conflict' => $this->conflict,
-        'replace' => $this->replace,
-        'provide' => $this->provide,
-        'suggest' => $this->suggest,
-        'autoload' => $this->autoload,
-        'autoload-dev' => $this->autoloadDev,
-        'minimum-stability' => $this->minimumStability,
-        'prefer-stable' => $this->preferStable,
-        'repositories' => $this->repositories,
-        'config' => $this->config,
-        'scripts' => $this->scripts,
-        'extra' => $this->extra,
-      ];
+        $json = [
+            'name' => $this->name,
+            'description' => $this->description,
+            'type' => $this->type,
+            'require' => $this->require,
+            'require-dev' => $this->requireDev,
+            'conflict' => $this->conflict,
+            'replace' => $this->replace,
+            'provide' => $this->provide,
+            'suggest' => $this->suggest,
+            'autoload' => $this->autoload,
+            'autoload-dev' => $this->autoloadDev,
+            'minimum-stability' => $this->minimumStability,
+            'prefer-stable' => $this->preferStable,
+            'repositories' => $this->repositories,
+            'config' => $this->config,
+            'scripts' => $this->scripts,
+            'extra' => $this->extra,
+        ];
 
-      if(!empty($this->version)) {
-        $json['version'] = $this->version;
-      }
+        if (!empty($this->version)) {
+            $json['version'] = $this->version;
+        }
 
-      if(!empty($this->keywords)) {
-        $json['keywords'] = $this->keywords;
-      }
+        if (!empty($this->keywords)) {
+            $json['keywords'] = $this->keywords;
+        }
 
-      if(!empty($this->homepage)) {
-        $json['homepage'] = $this->homepage;
-      }
+        if (!empty($this->homepage)) {
+            $json['homepage'] = $this->homepage;
+        }
 
-      if(!empty($this->time)) {
-        $json['time'] = $this->time;
-      }
+        if (!empty($this->time)) {
+            $json['time'] = $this->time;
+        }
 
-      if(!empty($this->license)) {
-        $json['license'] = $this->license;
-      }
+        if (!empty($this->license)) {
+            $json['license'] = $this->license;
+        }
 
-      if(!empty($this->authors)) {
-        $json['authors'] = $this->authors;
-      }
+        if (!empty($this->authors)) {
+            $json['authors'] = $this->authors;
+        }
 
-      if(!empty($this->support)) {
-        $json['support'] = $this->support;
-      }
+        if (!empty($this->support)) {
+            $json['support'] = $this->support;
+        }
 
-      if(!empty($this->extra)) {
-        $json['extra'] = $this->extra;
-      }
+        if (!empty($this->extra)) {
+            $json['extra'] = $this->extra;
+        }
 
-      if(!empty($this->bin)) {
-        $json['bin'] = $this->bin;
-      }
+        if (!empty($this->bin)) {
+            $json['bin'] = $this->bin;
+        }
 
-      if(!empty($this->archive)) {
-        $json['archive'] = $this->archive;
-      }
+        if (!empty($this->archive)) {
+            $json['archive'] = $this->archive;
+        }
 
-      if(!empty($this->nonFeatureBranches)) {
-        $json['non-feature-branches'] = $this->nonFeatureBranches;
-      }
+        if (!empty($this->nonFeatureBranches)) {
+            $json['non-feature-branches'] = $this->nonFeatureBranches;
+        }
 
-      if(!empty($this->featureBranches)) {
-        $json['feature-braches'] = $this->featureBranches;
-      }
+        if (!empty($this->featureBranches)) {
+            $json['feature-braches'] = $this->featureBranches;
+        }
 
-      return $json;
+        return $json;
     }
 
   /**
@@ -240,9 +240,9 @@ class Accompanist implements JsonSerializable
    */
     public function removeKeyword($keyword)
     {
-      unset($this->keywords[$keyword]);
+        unset($this->keywords[$keyword]);
 
-      return $this;
+        return $this;
     }
 
   /**
@@ -565,6 +565,18 @@ class Accompanist implements JsonSerializable
     }
 
   /**
+   * @param \stdClass $value
+   *
+   * @return $this
+   */
+    public function setAutoload($value)
+    {
+        $this->autoload = $value;
+
+        return $this;
+    }
+
+  /**
    * @param string $name
    * @param mixed $value
    *
@@ -693,9 +705,9 @@ class Accompanist implements JsonSerializable
     public function addScript($name, $path)
     {
         if (isset($this->scripts->$name)) {
-          $this->scripts->$name[] = $path;
+            $this->scripts->$name[] = $path;
         } else {
-          $this->scripts->$name = [$path];
+            $this->scripts->$name = [$path];
         }
 
         return $this;
@@ -721,33 +733,45 @@ class Accompanist implements JsonSerializable
         return $this->extra;
     }
 
-    /**
-     * @param string $extra
-     * @param mixed $value
-     *
-     * @return $this
-     */
-    public function addExtra($extra, $value)
+  /**
+   * @param \stdClass $extra
+   *
+   * @return $this
+   */
+    public function setExtra($extra)
     {
-      if (isset($this->extra->$extra) && is_array($this->extra->$extra)) {
-        array_merge($this->extra->$extra, $value);
-      } else {
-        $this->extra->$extra = $value;
-      }
+        $this->extra = $extra;
 
-      return $this;
+        return $this;
     }
 
-    /**
-     * @param string $extra
-     *
-     * @return $this
-     */
+  /**
+   * @param string $extra
+   * @param mixed $value
+   *
+   * @return $this
+   */
+    public function addExtra($extra, $value)
+    {
+        if (isset($this->extra->$extra) && is_array($this->extra->$extra)) {
+            array_merge($this->extra->$extra, $value);
+        } else {
+            $this->extra->$extra = $value;
+        }
+
+        return $this;
+    }
+
+  /**
+   * @param string $extra
+   *
+   * @return $this
+   */
     public function removeExtra($extra)
     {
-      unset($this->extra->$extra);
+        unset($this->extra->$extra);
 
-      return $this;
+        return $this;
     }
 
   /**
@@ -836,7 +860,9 @@ class Accompanist implements JsonSerializable
     }
 
   /**
-   * @param string $folder
+   * @param string $location
+   *
+   * @throws \Exception
    */
     public function generate($location)
     {
@@ -852,5 +878,98 @@ class Accompanist implements JsonSerializable
             throw new \Exception('A location must be provided when generating a composer.json file');
         }
     }
-}
 
+   /**
+     * @param $filename
+     */
+    public function writeToFile($filename)
+    {
+        file_put_contents($filename, $this->generateJSON());
+    }
+
+  /**
+   * @param string $url
+   *
+   * @return $this
+   * @throws \Exception
+   */
+    public function loadFromFile($url)
+    {
+        $jsonString = file_get_contents($url);
+
+        return $this->loadJSONString($jsonString);
+    }
+
+  /**
+   * @param $jsonString
+   *
+   * @return $this
+   * @throws \Exception
+   */
+    public function loadJSONString($jsonString)
+    {
+        $jsonData = json_decode($jsonString);
+        foreach ($jsonData as $key => $values) {
+            switch ($key) {
+                case 'require':
+                    foreach ($values as $require => $version) {
+                        $this->addRequire($require, $version);
+                    }
+                    break;
+                case 'require-dev':
+                    foreach ($values as $require => $version) {
+                        $this->addRequireDev($require, $version);
+                    }
+                    break;
+                case 'repositories':
+                    foreach ($values as $repo => $value) {
+                        if (is_numeric($repo)) {
+                            $repo = $this->getName() . '_' . $repo;
+                        }
+                        $this->addRepository($repo, $value->type, $value->url);
+                    }
+                    break;
+                case 'scripts':
+                    foreach ($values as $name => $path) {
+                        if (is_array($path)) {
+                            foreach ($path as $value) {
+                                $this->addScript($name, $value);
+                            }
+                        } else {
+                            $this->addScript($name, $path);
+                        }
+                    }
+                    break;
+                case 'extra':
+                    $this->setExtra($values);
+                    break;
+                case 'config':
+                    $this->setConfig($values);
+                    break;
+                case 'autoload':
+                    $this->setAutoload($values);
+                    break;
+                case 'authors':
+                    $this->setAuthors($values);
+                    break;
+                case 'name':
+                    $this->setName($values);
+                    break;
+                case 'license':
+                    $this->setLicense($values);
+                    break;
+                case 'description':
+                    $this->setDescription($values);
+                    break;
+                case 'minimum-stability':
+                    $this->setMinimumStability($values);
+                    break;
+                case 'autoload':
+                    $this->setAutoload($values);
+                    break;
+            }
+        }
+
+        return $this;
+    }
+}

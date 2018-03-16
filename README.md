@@ -1,7 +1,9 @@
 # Accompanist
 A simple PHP API for generating composer files
 
-## Example
+## Examples
+
+### Basic
 
 ```php
 use Accompanist\Accompanist;
@@ -11,5 +13,18 @@ $accompanist = new Accompanist('Sample Composer File');
 $accompanist->addRequire('monolog/monolog');
 $accompanist->addRequire('guzzlehttp/guzzle', '^6.3');
 
-return $accompanist->generateJSON();
+$composerJSONString = $accompanist->generateJSON();
+// or
+$accompanist->writeToFile('output/composer.json');
+```
+
+### Load from existing
+
+```php
+
+use Accompanist\Accompanist;
+
+$accompanist = new Accompanist('Imported Composer File');
+
+$accompanist->loadFromFile('import/composer.json');
 ```
