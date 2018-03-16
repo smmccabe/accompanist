@@ -649,9 +649,9 @@ class Accompanist implements JsonSerializable
    *
    * @return $this
    */
-    public function addRepository($name, $type, $url)
+    public function addRepository($name, $value)
     {
-        $this->repositories->$name = ['type' => $type, 'url' => $url];
+        $this->repositories->$name = $value;
 
         return $this;
     }
@@ -926,7 +926,7 @@ class Accompanist implements JsonSerializable
                         if (is_numeric($repo)) {
                             $repo = $this->getName() . '_' . $repo;
                         }
-                        $this->addRepository($repo, $value->type, $value->url);
+                        $this->addRepository($repo, $value);
                     }
                     break;
                 case 'scripts':
