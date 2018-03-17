@@ -964,9 +964,6 @@ class Accompanist implements JsonSerializable
                 case 'minimum-stability':
                     $this->setMinimumStability($values);
                     break;
-                case 'autoload':
-                    $this->setAutoload($values);
-                    break;
             }
         }
 
