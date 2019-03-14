@@ -41,6 +41,7 @@ class Accompanist implements JsonSerializable
         $this->setName($name);
         $this->setDescription($description);
 
+        $this->support = new \stdClass();
         $this->require = new \stdClass();
         $this->requireDev = new \stdClass();
         $this->conflict = new \stdClass();
@@ -54,7 +55,6 @@ class Accompanist implements JsonSerializable
         $this->scripts = new \stdClass();
         $this->extra = new \stdClass();
         $this->archive = new \stdClass();
-        $this->support = new \stdClass();
     }
 
   /**
@@ -325,6 +325,34 @@ class Accompanist implements JsonSerializable
     }
 
   /**
+   * @param array $author
+   *
+   * @return $this
+   */
+    public function addAuthor($author)
+    {
+        $this->authors[] = $author;
+
+        return $this;
+    }
+
+  /**
+   * @param string $remove_author
+   *
+   * @return $this
+   */
+    public function removeAuthor($remove_author)
+    {
+        foreach ($this->authors as $key => $author) {
+            if ($author['name'] == $remove_author['name']) {
+                unset($this->authors[$key]);
+            }
+        }
+
+        return $this;
+    }
+
+  /**
    * @param array $authors
    *
    * @return $this
@@ -345,13 +373,26 @@ class Accompanist implements JsonSerializable
     }
 
   /**
-   * @param mixed $support
+   * @param Support $support
    *
    * @return $this
    */
-    public function setSupport($support)
+    public function setSupport(Support $support)
     {
         $this->support = $support;
+
+        return $this;
+    }
+
+  /**
+   * @param Support $support
+   * @param boolean $overwrite
+   *
+   * @return $this
+   */
+    public function mergeSupport(Support $support, $overwrite = false)
+    {
+        $this->support->merge($support, $overwrite);
 
         return $this;
     }
@@ -968,5 +1009,41 @@ class Accompanist implements JsonSerializable
         }
 
         return $this;
+    }
+
+    public function merge(Accompanist $new_accompanist, $overwrite = true)
+    {
+        if (($this->getName() == '' || $overwrite) && $new_accompanist->getName() != '') {
+            $this->setName($new_accompanist->getName());
+        }
+        if (($this->getDescription() == '' || $overwrite) && $new_accompanist->getDescription() != '') {
+            $this->setDescription($new_accompanist->getDescription());
+        }
+
+        // Not sure how to handle version, it's sort of its own version.
+
+        if (($this->getType() == '' || $overwrite) && $new_accompanist->getType() != '') {
+            $this->setType($new_accompanist->getType());
+        }
+
+        foreach ($new_accompanist->getKeywords() as $keyword) {
+            $this->addKeyword($keyword);
+        }
+
+        if (($this->getHomepage() == '' || $overwrite) && $new_accompanist->getHomepage()) {
+            $this->setHomepage($new_accompanist->getHomepage());
+        }
+
+        // Time should be auto generated only?
+        if (($this->getLicense() == '' || $overwrite) && $new_accompanist->getLicense()) {
+            $this->setLicense($new_accompanist->getLicense());
+        }
+
+        // We could get duplicates, do we care?
+        foreach ($new_accompanist->getAuthors() as $author) {
+            $this->addAuthor($author);
+        }
+
+
     }
 }

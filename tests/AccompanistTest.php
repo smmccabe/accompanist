@@ -22,6 +22,13 @@ class AccompanistTest extends TestCase
 
         $this->assertEquals('smmccabe/accompanist', $accompanist->getName());
         $this->assertEquals('A PHP API for generating dynamic composer.json files', $accompanist->getDescription());
+        $this->assertEquals('1.0.0', $accompanist->getVersion());
+
+        $authors = $accompanist->getAuthors();
+        $this->assertEquals('Shawn McCabe', $authors[0]['name']);
+        $this->assertEquals('smccabe@acromedia.com', $authors[0]['email']);
+
+        $this->assertEquals('dev', $accompanist->getMinimumStability());
     }
 
     public function testWrite()
