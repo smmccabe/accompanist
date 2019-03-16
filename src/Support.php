@@ -14,6 +14,44 @@ class Support
     protected $rss = '';
     protected $chat = '';
 
+  /**
+   * @param stdClass $jsonObject
+   *
+   * @return $this
+   */
+    public function loadJSONObject($jsonObject)
+    {
+        if (isset($jsonObject->email)) {
+            $this->setEmail($jsonObject->email);
+        }
+        if (isset($jsonObject->issues)) {
+            $this->setIssues($jsonObject->issues);
+        }
+        if (isset($jsonObject->forum)) {
+            $this->setForum($jsonObject->forum);
+        }
+        if (isset($jsonObject->wiki)) {
+            $this->setWiki($jsonObject->wiki);
+        }
+        if (isset($jsonObject->irc)) {
+            $this->setIrc($jsonObject->irc);
+        }
+        if (isset($jsonObject->source)) {
+            $this->setSource($jsonObject->source);
+        }
+        if (isset($jsonObject->docs)) {
+            $this->setDocs($jsonObject->docs);
+        }
+        if (isset($jsonObject->rss)) {
+            $this->setRss($jsonObject->rss);
+        }
+        if (isset($jsonObject->chat)) {
+            $this->setChat($jsonObject->chat);
+        }
+
+        return $this;
+    }
+
     public function getEmail()
     {
         return $this->email;
@@ -131,10 +169,10 @@ class Support
         return $this;
     }
 
-    public function mergeEmail($email, $overwrite)
+    public function mergeSource($source, $overwrite)
     {
-        if ($this->email == '' || $overwrite) {
-            $this->setEmail($email);
+        if ($this->source == '' || $overwrite) {
+            $this->setSource($source);
         }
 
         return $this;
