@@ -75,6 +75,27 @@ class AccompanistTest extends TestCase
 
         $this->assertEquals('dev', $accompanist->getMinimumStability());
         $this->assertEquals(false, $accompanist->isPreferStable());
+
+        $repositories = $accompanist->getRepositories();
+        $this->assertEquals('composer', $repositories[0]->getType());
+        $this->assertEquals('http://packages.example.com', $repositories[0]->getUrl());
+        $this->assertEquals('composer', $repositories[1]->getType());
+        $this->assertEquals('https://packages.example.com', $repositories[1]->getUrl());
+        $this->assertEquals('true', $repositories[1]->getOptions()->ssl->verify_peer);
+        $this->assertEquals('vcs', $repositories[2]->getType());
+        $this->assertEquals('https://github.com/Seldaek/monolog', $repositories[2]->getUrl());
+        $this->assertEquals('pear', $repositories[3]->getType());
+        $this->assertEquals('https://pear2.php.net', $repositories[3]->getUrl());
+        $this->assertEquals('package', $repositories[4]->getType());
+
+        $package = $repositories[4]->getPackage();
+        $this->assertEquals('smarty/smarty', $package->getName());
+        $this->assertEquals('3.1.7', $package->getVersion());
+        $this->assertEquals('https://www.smarty.net/files/Smarty-3.1.7.zip', $package->getDist()->url);
+        $this->assertEquals('zip', $package->getDist()->type);
+        $this->assertEquals('https://smarty-php.googlecode.com/svn/', $package->getSource()->url);
+        $this->assertEquals('svn', $package->getSource()->type);
+        $this->assertEquals('tags/Smarty_3_1_7/distribution/', $package->getSource()->reference);
     }
 
     public function testWrite()

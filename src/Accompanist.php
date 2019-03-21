@@ -28,7 +28,7 @@ class Accompanist implements JsonSerializable
     protected $autoloadDev;
     protected $minimumStability = '';
     protected $preferStable = false;
-    protected $repositories;
+    protected $repositories = [];
     protected $config;
     protected $scripts;
     protected $extra;
@@ -51,7 +51,6 @@ class Accompanist implements JsonSerializable
         $this->suggest = new \stdClass();
         $this->autoload = new Autoload();
         $this->autoloadDev = new Autoload();
-        $this->repositories = new \stdClass();
         $this->config = new \stdClass();
         $this->scripts = new \stdClass();
         $this->extra = new \stdClass();
@@ -827,21 +826,21 @@ class Accompanist implements JsonSerializable
    *
    * @return $this
    */
-    public function addRepository($name, $value)
+    public function addRepository($repository)
     {
-        $this->repositories->$name = $value;
+        $this->repositories[] = $repository;
 
         return $this;
     }
 
   /**
-   * @param string $name
+   * @param string $key
    *
    * @return $this
    */
-    public function removeRepository($name)
+    public function removeRepository($key)
     {
-        unset($this->repositories[$name]);
+        unset($this->repositories[$key]);
 
         return $this;
     }
@@ -1120,11 +1119,10 @@ class Accompanist implements JsonSerializable
                     }
                     break;
                 case 'repositories':
-                    foreach ($values as $repo => $value) {
-                        if (is_numeric($repo)) {
-                            $repo = $this->getName() . '_' . $repo;
-                        }
-                        $this->addRepository($repo, $value);
+                    foreach ($values as $value) {
+                        $repository = new Repository();
+                        $repository->loadJSONObject($value);
+                        $this->addRepository($repository);
                     }
                     break;
                 case 'scripts':
