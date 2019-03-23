@@ -1,0 +1,111 @@
+{
+  "name": "stark/ultron",
+  "description": "An AI that definitely will not go rogue.",
+  "version": "2.0.1",
+  "type": "ai",
+  "keywords": [
+    "avengers",
+    "hank pym"
+  ],
+  "homepage": "https://ultron.starkenterprises.com",
+  "readme": "stark_notes.md",
+  "time": "1968-08-01",
+  "license": "Stark Enterprises Proprietary",
+  "authors": [
+    {
+      "name": "Tony Stark",
+      "email": "astark@starkenterprises.com"
+    }
+  ],
+  "support": {
+    "email": "ppotts@starkenterprises.com",
+    "issues": "https://github.com/stark/ultron/issues",
+    "forum": "ultron.starkenterprises.com/forum",
+    "wiki": "ultron.starkenterprises.com/wiki",
+    "irc": "#accompanist",
+    "source": "https://github.com/stark/ultron",
+    "docs": "ultron.starkenterprises.com/docs",
+    "rss": "ultron.starkenterprises.com/rss",
+    "chat": "slack #ultron"
+  },
+  "minimum-stability": "beta",
+  "require": {
+    "php": "^7.2",
+    "pym/particles": "^0.9.1"
+  },
+  "require-dev": {
+    "banner/gamma": "3.1.1"
+  },
+  "conflict": {
+    "pym/ultron": "1.0.0"
+  },
+  "replace": {
+    "pym/ultron": "1.0.2"
+  },
+  "provide": {
+    "stark/ironlegion": "0.0.2"
+  },
+  "suggest": {
+    "shield/override": "Failsafe if stuff goes haywire (unlikely)"
+  },
+  "autoload": {
+    "psr-4": {
+      "Ultron\\": "src/"
+    },
+    "psr-0": {
+      "UltronPsr0\\": "src-psr0/"
+    },
+    "classmap": ["src-ultron-classmap/"],
+    "exclude-from-classmap": ["src-ultron-classmap-exclude/"],
+    "files": ["src-ultron-files/"]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "UltronDev\\": "src-ultron-dev/"
+    },
+    "psr-0": {
+      "UltronDevPsr0\\": "src-ultron-dev-psr0/"
+    },
+    "classmap": ["src-ultron-dev-classmap/"],
+    "exclude-from-classmap": ["src-ultron-classmap-exclude/"],
+    "files": ["src-ultron-dev-files/"]
+  },
+  "repositories": [{
+      "type": "composer",
+      "url": "http://packages.starkenterprises.com"
+    },
+    {
+      "type": "composer",
+      "url": "https://packages.pymtechnologies.com",
+      "options": {
+        "ssl": {
+          "verify_peer": "false"
+        }
+      }
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/banner/gamma"
+    },
+    {
+      "type": "pear",
+      "url": "https://pear.starkenterprises.com"
+    },
+    {
+      "type": "package",
+      "package": {
+        "name": "stark/jarvis",
+        "version": "5.0.1",
+        "dist": {
+          "url": "https://jarvis.starkenterprises.net/files/jarvis-5.0.1.zip",
+          "type": "zip"
+        },
+        "source": {
+          "url": "https://ironman.tonystark.com/svn/",
+          "type": "svn",
+          "reference": "tags/ironman_3_1_7/distribution/"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "name": "smmccabe/accompanist",
+  "description": "A PHP API for generating dynamic composer.json files",
+  "version": "1.0.0",
+  "type": "library",
+  "keywords": [
+    "logging",
+    "events"
+  ],
+  "homepage": "https://www.example.com",
+  "readme": "README.md",
+  "time": "2019-03-15",
+  "license": "GPL-3.0",
+  "authors": [
+    {
+      "name": "Shawn McCabe",
+      "email": "smccabe@acromedia.com"
+    }
+  ],
+  "support": {
+    "email": "smccabe@acromedia.com",
+    "issues": "https://github.com/smmccabe/accompanist/issues",
+    "forum": "www.example.com/forum",
+    "wiki": "www.example.com/wiki",
+    "irc": "#accompanist",
+    "source": "https://github.com/smmccabe/accompanist",
+    "docs": "www.example.com/docs",
+    "rss": "www.example.com/rss",
+    "chat": "slack #accompanist"
+  },
+  "minimum-stability": "dev",
+  "require": {
+    "php": "^7.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^7.1@dev"
+  },
+  "conflict": {
+    "made/up": "1.0.0"
+  },
+  "replace": {
+    "replace/me": "3.2.1"
+  },
+  "provide": {
+    "pro/vide": "4.5.6"
+  },
+  "suggest": {
+    "monolog/monolog": "Allows more advanced logging of the application flow"
+  },
+  "autoload": {
+    "psr-4": {
+      "Accompanist\\": "src/"
+    },
+    "psr-0": {
+      "AccompanistPsr0\\": "src-psr0/"
+    },
+    "classmap": ["src-classmap/"],
+    "exclude-from-classmap": ["src-classmap-exclude/"],
+    "files": ["src-files/"]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "AccompanistDev\\": "src-dev/"
+    },
+    "psr-0": {
+      "AccompanistDevPsr0\\": "src-dev-psr0/"
+    },
+    "classmap": ["src-dev-classmap/"],
+    "exclude-from-classmap": ["src-dev-classmap-exclude/"],
+    "files": ["src-dev-files/"]
+  },
+  "repositories": [{
+      "type": "composer",
+      "url": "http://packages.example.com"
+    },
+    {
+      "type": "composer",
+      "url": "https://packages.example.com",
+      "options": {
+        "ssl": {
+          "verify_peer": "true"
+        }
+      }
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/Seldaek/monolog"
+    },
+    {
+      "type": "pear",
+      "url": "https://pear2.php.net"
+    },
+    {
+      "type": "package",
+      "package": {
+        "name": "smarty/smarty",
+        "version": "3.1.7",
+        "dist": {
+          "url": "https://www.smarty.net/files/Smarty-3.1.7.zip",
+          "type": "zip"
+        },
+        "source": {
+          "url": "https://smarty-php.googlecode.com/svn/",
+          "type": "svn",
+          "reference": "tags/Smarty_3_1_7/distribution/"
+        }
+      }
+    }
+  ]
+}

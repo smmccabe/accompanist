@@ -37,7 +37,7 @@ class Accompanist implements JsonSerializable
     protected $nonFeatureBranches = [];
     protected $featureBranches = [];
 
-    public function __construct($name, $description = '')
+    public function __construct($name = '', $description = '')
     {
         $this->setName($name);
         $this->setDescription($description);
@@ -1155,7 +1155,9 @@ class Accompanist implements JsonSerializable
                     $this->setType($values);
                     break;
                 case 'keywords':
-                    $this->setKeywords($values);
+                    foreach ($values as $value) {
+                        $this->addKeyword($value);
+                    }
                     break;
                 case 'homepage':
                     $this->setHomepage($values);
@@ -1190,7 +1192,7 @@ class Accompanist implements JsonSerializable
         return $this;
     }
 
-    public function merge(Accompanist $new_accompanist, $overwrite = true)
+    public function merge(Accompanist $new_accompanist, $overwrite = false)
     {
         if (($this->getName() == '' || $overwrite) && $new_accompanist->getName() != '') {
             $this->setName($new_accompanist->getName());
@@ -1199,7 +1201,9 @@ class Accompanist implements JsonSerializable
             $this->setDescription($new_accompanist->getDescription());
         }
 
-        // Not sure how to handle version, it's sort of its own version.
+        if (($this->getVersion() == '' || $overwrite) && $new_accompanist->getVersion() != '') {
+            $this->setVersion($new_accompanist->getVersion());
+        }
 
         if (($this->getType() == '' || $overwrite) && $new_accompanist->getType() != '') {
             $this->setType($new_accompanist->getType());
@@ -1217,6 +1221,10 @@ class Accompanist implements JsonSerializable
             $this->setReadme($new_accompanist->getReadme());
         }
 
+        if (($this->getTime() == '' || $overwrite) && $new_accompanist->getTime()) {
+            $this->setTime($new_accompanist->getTime());
+        }
+
         // Time should be auto generated only?
         if (($this->getLicense() == '' || $overwrite) && $new_accompanist->getLicense()) {
             $this->setLicense($new_accompanist->getLicense());
@@ -1225,6 +1233,10 @@ class Accompanist implements JsonSerializable
         // We could get duplicates, do we care?
         foreach ($new_accompanist->getAuthors() as $author) {
             $this->addAuthor($author);
+        }
+
+        if (($this->getSupport() == '' || $overwrite) && $new_accompanist->getReadme()) {
+            $this->setReadme($new_accompanist->getReadme());
         }
     }
 }
