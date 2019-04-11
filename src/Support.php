@@ -248,10 +248,10 @@ class Support
         $this->mergeForum($support->getForum(), $overwrite);
         $this->mergeWiki($support->getWiki(), $overwrite);
         $this->mergeIrc($support->getIrc(), $overwrite);
-        $this->mergeSources($support->getSources(), $overwrite);
+        $this->mergeSource($support->getSource(), $overwrite);
         $this->mergeDocs($support->getDocs(), $overwrite);
-        $this->mergeRss($support->mergeRss(), $overwrite);
-        $this->mergeChat($support->chat(), $overwrite);
+        $this->mergeRss($support->getRss(), $overwrite);
+        $this->mergeChat($support->getChat(), $overwrite);
 
         return $this;
     }

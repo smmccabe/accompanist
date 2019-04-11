@@ -22,7 +22,7 @@
     "issues": "https://github.com/stark/ultron/issues",
     "forum": "ultron.starkenterprises.com/forum",
     "wiki": "ultron.starkenterprises.com/wiki",
-    "irc": "#accompanist",
+    "irc": "#ultron",
     "source": "https://github.com/stark/ultron",
     "docs": "ultron.starkenterprises.com/docs",
     "rss": "ultron.starkenterprises.com/rss",
@@ -50,10 +50,10 @@
   },
   "autoload": {
     "psr-4": {
-      "Ultron\\": "src/"
+      "Ultron\\": "src-ultron/"
     },
     "psr-0": {
-      "UltronPsr0\\": "src-psr0/"
+      "UltronPsr0\\": "src-ultron-psr0/"
     },
     "classmap": ["src-ultron-classmap/"],
     "exclude-from-classmap": ["src-ultron-classmap-exclude/"],
@@ -67,7 +67,7 @@
       "UltronDevPsr0\\": "src-ultron-dev-psr0/"
     },
     "classmap": ["src-ultron-dev-classmap/"],
-    "exclude-from-classmap": ["src-ultron-classmap-exclude/"],
+    "exclude-from-classmap": ["src-ultron-dev-classmap-exclude/"],
     "files": ["src-ultron-dev-files/"]
   },
   "repositories": [{
@@ -103,7 +103,7 @@
         "source": {
           "url": "https://ironman.tonystark.com/svn/",
           "type": "svn",
-          "reference": "tags/ironman_3_1_7/distribution/"
+          "reference": "tags/jarvis_5_0_1/distribution/"
         }
       }
     }

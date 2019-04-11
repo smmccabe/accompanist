@@ -126,23 +126,18 @@ class Autoload implements JsonSerializable
         return $this;
     }
 
-    public function addPsr0($psr0, $value)
+    public function addPsr0($psr0, $value, $overwrite = false)
     {
-        $this->psr0->$psr0 = $value;
+        if (!isset($this->getPsr0()->$psr0) || $overwrite) {
+            $this->psr0->$psr0 = $value;
+        }
 
         return $this;
     }
 
     public function removePsr0($psr0)
     {
-        unset($this->psr0->$psr0);
-
-        return $this;
-    }
-
-    public function mergePsr0($psr0, $overwrite)
-    {
-        //TODO
+        unset($this->getPsr0()->$psr0);
 
         return $this;
     }
@@ -229,5 +224,24 @@ class Autoload implements JsonSerializable
         }
 
         return $this;
+    }
+
+    public function merge(Autoload $autoload, $overwrite = false)
+    {
+        foreach ($autoload->getPsr4() as $psr4 => $value) {
+            $this->addPsr4($psr4, $value, $overwrite);
+        }
+        foreach ($autoload->getPsr0() as $psr0 => $value) {
+            $this->addPsr0($psr0, $value, $overwrite);
+        }
+        foreach ($autoload->getClassmap() as $classmap) {
+            $this->addClassmap($classmap);
+        }
+        foreach ($autoload->getExcludeFromClassmap() as $classmap) {
+            $this->addExcludeFromClassmap($classmap);
+        }
+        foreach ($autoload->getFiles() as $file) {
+            $this->addFile($file);
+        }
     }
 }

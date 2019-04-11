@@ -180,6 +180,20 @@ class AccompanistTest extends TestCase
             $accompanist_base->getSuggest()->{"monolog/monolog"}
         );
 
+        $this->assertEquals('^0.9.1', $accompanist_base->getRequire()->{'pym/particles'});
+
+        $this->assertEquals('^7.1@dev', $accompanist_base->getRequireDev()->{"phpunit/phpunit"});
+        $this->assertEquals('3.1.1', $accompanist_base->getRequireDev()->{'banner/gamma'});
+
+        $this->assertEquals('1.0.0', $accompanist_base->getConflict()->{"made/up"});
+        $this->assertEquals('1.0.0', $accompanist_base->getConflict()->{'pym/ultron'});
+
+        $this->assertEquals('3.2.1', $accompanist_base->getReplace()->{"replace/me"});
+        $this->assertEquals('1.0.2', $accompanist_base->getReplace()->{'pym/ultron'});
+
+        $this->assertEquals('4.5.6', $accompanist_base->getProvide()->{"pro/vide"});
+        $this->assertEquals('0.0.2', $accompanist_base->getProvide()->{'stark/ironlegion'});
+
         $autoload = $accompanist_base->getAutoload();
         $this->assertEquals('src/', $autoload->getPsr4()->{"Accompanist\\"});
         $this->assertEquals('src-psr0/', $autoload->getPsr0()->{"AccompanistPsr0\\"});
@@ -217,6 +231,26 @@ class AccompanistTest extends TestCase
         $this->assertEquals('https://smarty-php.googlecode.com/svn/', $package->getSource()->url);
         $this->assertEquals('svn', $package->getSource()->type);
         $this->assertEquals('tags/Smarty_3_1_7/distribution/', $package->getSource()->reference);
+
+        $this->assertEquals('composer', $repositories[5]->getType());
+        $this->assertEquals('http://packages.starkenterprises.com', $repositories[5]->getUrl());
+        $this->assertEquals('composer', $repositories[6]->getType());
+        $this->assertEquals('https://packages.pymtechnologies.com', $repositories[6]->getUrl());
+        $this->assertEquals('false', $repositories[6]->getOptions()->ssl->verify_peer);
+        $this->assertEquals('vcs', $repositories[7]->getType());
+        $this->assertEquals('https://github.com/banner/gamma', $repositories[7]->getUrl());
+        $this->assertEquals('pear', $repositories[8]->getType());
+        $this->assertEquals('https://pear.starkenterprises.com', $repositories[8]->getUrl());
+        $this->assertEquals('package', $repositories[9]->getType());
+
+        $package = $repositories[9]->getPackage();
+        $this->assertEquals('stark/jarvis', $package->getName());
+        $this->assertEquals('5.0.1', $package->getVersion());
+        $this->assertEquals('https://jarvis.starkenterprises.net/files/jarvis-5.0.1.zip', $package->getDist()->url);
+        $this->assertEquals('zip', $package->getDist()->type);
+        $this->assertEquals('https://ironman.tonystark.com/svn/', $package->getSource()->url);
+        $this->assertEquals('svn', $package->getSource()->type);
+        $this->assertEquals('tags/jarvis_5_0_1/distribution/', $package->getSource()->reference);
     }
 
     public function testMergeOverwrite()
@@ -252,38 +286,70 @@ class AccompanistTest extends TestCase
 
         $support = $accompanist_base->getSupport();
         $this->assertEquals('ppotts@starkenterprises.com', $support->getEmail());
-        $this->assertEquals('https://github.com/smmccabe/accompanist/issues', $support->getIssues());
-        $this->assertEquals('www.example.com/forum', $support->getForum());
-        $this->assertEquals('www.example.com/wiki', $support->getWiki());
-        $this->assertEquals('#accompanist', $support->getIrc());
-        $this->assertEquals('https://github.com/smmccabe/accompanist', $support->getSource());
-        $this->assertEquals('www.example.com/docs', $support->getDocs());
-        $this->assertEquals('www.example.com/rss', $support->getRss());
-        $this->assertEquals('slack #accompanist', $support->getChat());
+        $this->assertEquals('https://github.com/stark/ultron/issues', $support->getIssues());
+        $this->assertEquals('ultron.starkenterprises.com/forum', $support->getForum());
+        $this->assertEquals('ultron.starkenterprises.com/wiki', $support->getWiki());
+        $this->assertEquals('#ultron', $support->getIrc());
+        $this->assertEquals('https://github.com/stark/ultron', $support->getSource());
+        $this->assertEquals('ultron.starkenterprises.com/docs', $support->getDocs());
+        $this->assertEquals('ultron.starkenterprises.com/rss', $support->getRss());
+        $this->assertEquals('slack #ultron', $support->getChat());
 
-        $this->assertEquals('^7.0', $accompanist_base->getRequire()->php);
+        $this->assertEquals('^7.2', $accompanist_base->getRequire()->php);
+        $this->assertEquals('^0.9.1', $accompanist_base->getRequire()->{'pym/particles'});
+
         $this->assertEquals('^7.1@dev', $accompanist_base->getRequireDev()->{"phpunit/phpunit"});
+        $this->assertEquals('3.1.1', $accompanist_base->getRequireDev()->{'banner/gamma'});
+
         $this->assertEquals('1.0.0', $accompanist_base->getConflict()->{"made/up"});
+        $this->assertEquals('1.0.0', $accompanist_base->getConflict()->{'pym/ultron'});
+
         $this->assertEquals('3.2.1', $accompanist_base->getReplace()->{"replace/me"});
+        $this->assertEquals('1.0.2', $accompanist_base->getReplace()->{'pym/ultron'});
+
         $this->assertEquals('4.5.6', $accompanist_base->getProvide()->{"pro/vide"});
+        $this->assertEquals('0.0.2', $accompanist_base->getProvide()->{'stark/ironlegion'});
+
         $this->assertEquals(
             'Allows more advanced logging of the application flow',
             $accompanist_base->getSuggest()->{"monolog/monolog"}
         );
+        $this->assertEquals(
+            'Failsafe if stuff goes haywire (unlikely)',
+            $accompanist_base->getSuggest()->{'shield/override'}
+        );
 
         $autoload = $accompanist_base->getAutoload();
         $this->assertEquals('src/', $autoload->getPsr4()->{"Accompanist\\"});
+        $this->assertEquals('src-ultron/', $autoload->getPsr4()->{"Ultron\\"});
+
         $this->assertEquals('src-psr0/', $autoload->getPsr0()->{"AccompanistPsr0\\"});
+        $this->assertEquals('src-ultron-psr0/', $autoload->getPsr0()->{"UltronPsr0\\"});
+
         $this->assertEquals('src-classmap/', $autoload->getClassmap()[0]);
+        $this->assertEquals('src-ultron-classmap/', $autoload->getClassmap()[1]);
+
         $this->assertEquals('src-classmap-exclude/', $autoload->getExcludeFromClassmap()[0]);
+        $this->assertEquals('src-ultron-classmap-exclude/', $autoload->getExcludeFromClassmap()[1]);
+
         $this->assertEquals('src-files/', $autoload->getFiles()[0]);
+        $this->assertEquals('src-ultron-files/', $autoload->getFiles()[1]);
 
         $autoload = $accompanist_base->getAutoloadDev();
         $this->assertEquals('src-dev/', $autoload->getPsr4()->{"AccompanistDev\\"});
+        $this->assertEquals('src-ultron-dev/', $autoload->getPsr4()->{"UltronDev\\"});
+
         $this->assertEquals('src-dev-psr0/', $autoload->getPsr0()->{"AccompanistDevPsr0\\"});
+        $this->assertEquals('src-ultron-dev-psr0/', $autoload->getPsr0()->{"UltronDevPsr0\\"});
+
         $this->assertEquals('src-dev-classmap/', $autoload->getClassmap()[0]);
+        $this->assertEquals('src-ultron-dev-classmap/', $autoload->getClassmap()[1]);
+
         $this->assertEquals('src-dev-classmap-exclude/', $autoload->getExcludeFromClassmap()[0]);
+        $this->assertEquals('src-ultron-dev-classmap-exclude/', $autoload->getExcludeFromClassmap()[1]);
+
         $this->assertEquals('src-dev-files/', $autoload->getFiles()[0]);
+        $this->assertEquals('src-ultron-dev-files/', $autoload->getFiles()[1]);
 
         $this->assertEquals('dev', $accompanist_base->getMinimumStability());
         $this->assertEquals(false, $accompanist_base->isPreferStable());
@@ -308,5 +374,25 @@ class AccompanistTest extends TestCase
         $this->assertEquals('https://smarty-php.googlecode.com/svn/', $package->getSource()->url);
         $this->assertEquals('svn', $package->getSource()->type);
         $this->assertEquals('tags/Smarty_3_1_7/distribution/', $package->getSource()->reference);
+
+        $this->assertEquals('composer', $repositories[5]->getType());
+        $this->assertEquals('http://packages.starkenterprises.com', $repositories[5]->getUrl());
+        $this->assertEquals('composer', $repositories[6]->getType());
+        $this->assertEquals('https://packages.pymtechnologies.com', $repositories[6]->getUrl());
+        $this->assertEquals('false', $repositories[6]->getOptions()->ssl->verify_peer);
+        $this->assertEquals('vcs', $repositories[7]->getType());
+        $this->assertEquals('https://github.com/banner/gamma', $repositories[7]->getUrl());
+        $this->assertEquals('pear', $repositories[8]->getType());
+        $this->assertEquals('https://pear.starkenterprises.com', $repositories[8]->getUrl());
+        $this->assertEquals('package', $repositories[9]->getType());
+
+        $package = $repositories[9]->getPackage();
+        $this->assertEquals('stark/jarvis', $package->getName());
+        $this->assertEquals('5.0.1', $package->getVersion());
+        $this->assertEquals('https://jarvis.starkenterprises.net/files/jarvis-5.0.1.zip', $package->getDist()->url);
+        $this->assertEquals('zip', $package->getDist()->type);
+        $this->assertEquals('https://ironman.tonystark.com/svn/', $package->getSource()->url);
+        $this->assertEquals('svn', $package->getSource()->type);
+        $this->assertEquals('tags/jarvis_5_0_1/distribution/', $package->getSource()->reference);
     }
 }

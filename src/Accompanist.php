@@ -447,9 +447,11 @@ class Accompanist implements JsonSerializable
    *
    * @return $this
    */
-    public function addRequire($require, $version = '*')
+    public function addRequire($require, $version = '*', $overwrite = false)
     {
-        $this->require->$require = $version;
+        if (!isset($this->getRequire()->$require) || $overwrite) {
+            $this->getRequire()->$require = $version;
+        }
 
         return $this;
     }
@@ -480,9 +482,11 @@ class Accompanist implements JsonSerializable
    *
    * @return $this
    */
-    public function addRequireDev($require, $version = '*')
+    public function addRequireDev($require, $version = '*', $overwrite = false)
     {
-        $this->requireDev->$require = $version;
+        if (!isset($this->getRequireDev()->$require) || $overwrite) {
+            $this->getRequireDev()->$require = $version;
+        }
 
         return $this;
     }
@@ -525,9 +529,11 @@ class Accompanist implements JsonSerializable
    *
    * @return $this
    */
-    public function addConflict($conflict, $version = '*')
+    public function addConflict($conflict, $version = '*', $overwrite = false)
     {
-        $this->conflict->$conflict = $version;
+        if (!isset($this->getConflict()->$conflict) || $overwrite) {
+            $this->getConflict()->$conflict = $version;
+        }
 
         return $this;
     }
@@ -570,9 +576,11 @@ class Accompanist implements JsonSerializable
    *
    * @return $this
    */
-    public function addReplace($replace, $version = '*')
+    public function addReplace($replace, $version = '*', $overwrite = false)
     {
-        $this->replace->$replace = $version;
+        if (!isset($this->getReplace()->$replace) || $overwrite) {
+            $this->getReplace()->$replace = $version;
+        }
 
         return $this;
     }
@@ -615,9 +623,11 @@ class Accompanist implements JsonSerializable
    *
    * @return $this
    */
-    public function addProvide($provide, $version = '*')
+    public function addProvide($provide, $version = '*', $overwrite = false)
     {
-        $this->provide->$provide = $version;
+        if (!isset($this->getProvide()->$provide) || $overwrite) {
+            $this->getProvide()->$provide = $version;
+        }
 
         return $this;
     }
@@ -660,9 +670,11 @@ class Accompanist implements JsonSerializable
    *
    * @return $this
    */
-    public function addSuggest($suggest, $version = '*')
+    public function addSuggest($suggest, $version = '*', $overwrite = false)
     {
-        $this->suggest->$suggest = $version;
+        if (!isset($this->getSuggest()->$suggest) || $overwrite) {
+            $this->getSuggest()->$suggest = $version;
+        }
 
         return $this;
     }
@@ -779,6 +791,18 @@ class Accompanist implements JsonSerializable
     }
 
   /**
+   * @param Autoload $autoload
+   *
+   * @return $this
+   */
+    public function mergeAutoload(Autoload $autoload)
+    {
+        $this->getAutoload()->merge($autoload);
+
+        return $this;
+    }
+
+  /**
    * @return \stdClass
    */
     public function getAutoloadDev()
@@ -807,6 +831,18 @@ class Accompanist implements JsonSerializable
     public function removeAutoloadDev($name)
     {
         unset($this->autoloadDev->$name);
+
+        return $this;
+    }
+
+  /**
+   * @param Autoload $autoload
+   *
+   * @return $this
+   */
+    public function mergeAutoloadDev(Autoload $autoload)
+    {
+        $this->getAutoloadDev()->merge($autoload);
 
         return $this;
     }
@@ -1235,8 +1271,37 @@ class Accompanist implements JsonSerializable
             $this->addAuthor($author);
         }
 
-        if (($this->getSupport() == '' || $overwrite) && $new_accompanist->getReadme()) {
-            $this->setReadme($new_accompanist->getReadme());
+        $this->mergeSupport($new_accompanist->getSupport(), $overwrite);
+
+        foreach ($new_accompanist->getRequire() as $require => $version) {
+            $this->addRequire($require, $version, $overwrite);
+        }
+
+        foreach ($new_accompanist->getRequireDev() as $require => $version) {
+            $this->addRequireDev($require, $version, $overwrite);
+        }
+
+        foreach ($new_accompanist->getConflict() as $conflict => $version) {
+            $this->addConflict($conflict, $version, $overwrite);
+        }
+
+        foreach ($new_accompanist->getProvide() as $provide => $version) {
+            $this->addProvide($provide, $version, $overwrite);
+        }
+
+        foreach ($new_accompanist->getReplace() as $replace => $version) {
+            $this->addReplace($replace, $version, $overwrite);
+        }
+
+        foreach ($new_accompanist->getSuggest() as $suggest => $version) {
+            $this->addSuggest($suggest, $version, $overwrite);
+        }
+
+        $this->mergeAutoload($new_accompanist->getAutoload(), $overwrite);
+        $this->mergeAutoloadDev($new_accompanist->getAutoloadDev(), $overwrite);
+
+        foreach ($new_accompanist->getRepositories() as $repository) {
+            $this->addRepository($repository);
         }
     }
 }
