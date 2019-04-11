@@ -13,6 +13,7 @@ class Accompanist implements JsonSerializable
     protected $type = '';
     protected $keywords = [];
     protected $homepage = '';
+    protected $readme = '';
     protected $time = '';
     protected $license = '';
     protected $authors = [];
@@ -25,9 +26,9 @@ class Accompanist implements JsonSerializable
     protected $suggest;
     protected $autoload;
     protected $autoloadDev;
-    protected $minimumStability = 'dev';
-    protected $preferStable = true;
-    protected $repositories;
+    protected $minimumStability = '';
+    protected $preferStable = false;
+    protected $repositories = [];
     protected $config;
     protected $scripts;
     protected $extra;
@@ -36,25 +37,24 @@ class Accompanist implements JsonSerializable
     protected $nonFeatureBranches = [];
     protected $featureBranches = [];
 
-    public function __construct($name, $description = '')
+    public function __construct($name = '', $description = '')
     {
         $this->setName($name);
         $this->setDescription($description);
 
+        $this->support = new Support();
         $this->require = new \stdClass();
         $this->requireDev = new \stdClass();
         $this->conflict = new \stdClass();
         $this->replace = new \stdClass();
         $this->provide = new \stdClass();
         $this->suggest = new \stdClass();
-        $this->autoload = new \stdClass();
-        $this->autoloadDev = new \stdClass();
-        $this->repositories = new \stdClass();
+        $this->autoload = new Autoload();
+        $this->autoloadDev = new Autoload();
         $this->config = new \stdClass();
         $this->scripts = new \stdClass();
         $this->extra = new \stdClass();
         $this->archive = new \stdClass();
-        $this->support = new \stdClass();
     }
 
   /**
@@ -92,6 +92,10 @@ class Accompanist implements JsonSerializable
 
         if (!empty($this->homepage)) {
             $json['homepage'] = $this->homepage;
+        }
+
+        if (!empty($this->readme)) {
+            $json['readme'] = $this->readme;
         }
 
         if (!empty($this->time)) {
@@ -222,6 +226,18 @@ class Accompanist implements JsonSerializable
     }
 
   /**
+   * @param array $keywords
+   *
+   * @return $this
+   */
+    public function setKeywords($keywords)
+    {
+        $this->keywords = $keywords;
+
+        return $this->keywords;
+    }
+
+  /**
    * @param string $keyword
    *
    * @return $this
@@ -261,6 +277,26 @@ class Accompanist implements JsonSerializable
     public function setHomepage($homepage)
     {
         $this->homepage = $homepage;
+
+        return $this;
+    }
+
+  /**
+   * @return string
+   */
+    public function getReadme()
+    {
+        return $this->readme;
+    }
+
+  /**
+   * @param string $readme
+   *
+   * @return $this
+   */
+    public function setReadme($readme)
+    {
+        $this->readme = $readme;
 
         return $this;
     }
@@ -325,6 +361,34 @@ class Accompanist implements JsonSerializable
     }
 
   /**
+   * @param array $author
+   *
+   * @return $this
+   */
+    public function addAuthor($author)
+    {
+        $this->authors[] = $author;
+
+        return $this;
+    }
+
+  /**
+   * @param string $remove_author
+   *
+   * @return $this
+   */
+    public function removeAuthor($remove_author)
+    {
+        foreach ($this->authors as $key => $author) {
+            if ($author['name'] == $remove_author['name']) {
+                unset($this->authors[$key]);
+            }
+        }
+
+        return $this;
+    }
+
+  /**
    * @param array $authors
    *
    * @return $this
@@ -345,13 +409,26 @@ class Accompanist implements JsonSerializable
     }
 
   /**
-   * @param mixed $support
+   * @param Support $support
    *
    * @return $this
    */
-    public function setSupport($support)
+    public function setSupport(Support $support)
     {
         $this->support = $support;
+
+        return $this;
+    }
+
+  /**
+   * @param Support $support
+   * @param boolean $overwrite
+   *
+   * @return $this
+   */
+    public function mergeSupport(Support $support, $overwrite = false)
+    {
+        $this->support->merge($support, $overwrite);
 
         return $this;
     }
@@ -370,9 +447,11 @@ class Accompanist implements JsonSerializable
    *
    * @return $this
    */
-    public function addRequire($require, $version = '*')
+    public function addRequire($require, $version = '*', $overwrite = false)
     {
-        $this->require->$require = $version;
+        if (!isset($this->getRequire()->$require) || $overwrite) {
+            $this->getRequire()->$require = $version;
+        }
 
         return $this;
     }
@@ -403,9 +482,11 @@ class Accompanist implements JsonSerializable
    *
    * @return $this
    */
-    public function addRequireDev($require, $version = '*')
+    public function addRequireDev($require, $version = '*', $overwrite = false)
     {
-        $this->requireDev->$require = $version;
+        if (!isset($this->getRequireDev()->$require) || $overwrite) {
+            $this->getRequireDev()->$require = $version;
+        }
 
         return $this;
     }
@@ -443,6 +524,33 @@ class Accompanist implements JsonSerializable
     }
 
   /**
+   * @param string $conflict
+   * @param string $version
+   *
+   * @return $this
+   */
+    public function addConflict($conflict, $version = '*', $overwrite = false)
+    {
+        if (!isset($this->getConflict()->$conflict) || $overwrite) {
+            $this->getConflict()->$conflict = $version;
+        }
+
+        return $this;
+    }
+
+  /**
+   * @param string $conflict
+   *
+   * @return $this
+   */
+    public function removeConflict($conflict)
+    {
+        unset($this->conflict->$conflict);
+
+        return $this;
+    }
+
+  /**
    * @return mixed
    */
     public function getReplace()
@@ -458,6 +566,33 @@ class Accompanist implements JsonSerializable
     public function setReplace($replace)
     {
         $this->replace = $replace;
+
+        return $this;
+    }
+
+  /**
+   * @param string $replace
+   * @param string $version
+   *
+   * @return $this
+   */
+    public function addReplace($replace, $version = '*', $overwrite = false)
+    {
+        if (!isset($this->getReplace()->$replace) || $overwrite) {
+            $this->getReplace()->$replace = $version;
+        }
+
+        return $this;
+    }
+
+  /**
+   * @param string $replace
+   *
+   * @return $this
+   */
+    public function removeReplace($replace)
+    {
+        unset($this->replace->$replace);
 
         return $this;
     }
@@ -483,6 +618,33 @@ class Accompanist implements JsonSerializable
     }
 
   /**
+   * @param string $provide
+   * @param string $version
+   *
+   * @return $this
+   */
+    public function addProvide($provide, $version = '*', $overwrite = false)
+    {
+        if (!isset($this->getProvide()->$provide) || $overwrite) {
+            $this->getProvide()->$provide = $version;
+        }
+
+        return $this;
+    }
+
+  /**
+   * @param string $provide
+   *
+   * @return $this
+   */
+    public function removeProvide($provide)
+    {
+        unset($this->provide->$provide);
+
+        return $this;
+    }
+
+  /**
    * @return mixed
    */
     public function getSuggest()
@@ -498,6 +660,33 @@ class Accompanist implements JsonSerializable
     public function setSuggest($suggest)
     {
         $this->suggest = $suggest;
+
+        return $this;
+    }
+
+  /**
+   * @param string $suggest
+   * @param string $version
+   *
+   * @return $this
+   */
+    public function addSuggest($suggest, $version = '*', $overwrite = false)
+    {
+        if (!isset($this->getSuggest()->$suggest) || $overwrite) {
+            $this->getSuggest()->$suggest = $version;
+        }
+
+        return $this;
+    }
+
+  /**
+   * @param string $suggest
+   *
+   * @return $this
+   */
+    public function removeSuggest($suggest)
+    {
+        unset($this->suggest->$suggest);
 
         return $this;
     }
@@ -602,6 +791,18 @@ class Accompanist implements JsonSerializable
     }
 
   /**
+   * @param Autoload $autoload
+   *
+   * @return $this
+   */
+    public function mergeAutoload(Autoload $autoload)
+    {
+        $this->getAutoload()->merge($autoload);
+
+        return $this;
+    }
+
+  /**
    * @return \stdClass
    */
     public function getAutoloadDev()
@@ -635,6 +836,18 @@ class Accompanist implements JsonSerializable
     }
 
   /**
+   * @param Autoload $autoload
+   *
+   * @return $this
+   */
+    public function mergeAutoloadDev(Autoload $autoload)
+    {
+        $this->getAutoloadDev()->merge($autoload);
+
+        return $this;
+    }
+
+  /**
    * @return \stdClass
    */
     public function getRepositories()
@@ -649,21 +862,21 @@ class Accompanist implements JsonSerializable
    *
    * @return $this
    */
-    public function addRepository($name, $value)
+    public function addRepository($repository)
     {
-        $this->repositories->$name = $value;
+        $this->repositories[] = $repository;
 
         return $this;
     }
 
   /**
-   * @param string $name
+   * @param string $key
    *
    * @return $this
    */
-    public function removeRepository($name)
+    public function removeRepository($key)
     {
-        unset($this->repositories[$name]);
+        unset($this->repositories[$key]);
 
         return $this;
     }
@@ -921,12 +1134,31 @@ class Accompanist implements JsonSerializable
                         $this->addRequireDev($require, $version);
                     }
                     break;
+                case 'conflict':
+                    foreach ($values as $conflict => $version) {
+                        $this->addConflict($conflict, $version);
+                    }
+                    break;
+                case 'replace':
+                    foreach ($values as $replace => $version) {
+                        $this->addReplace($replace, $version);
+                    }
+                    break;
+                case 'provide':
+                    foreach ($values as $provide => $version) {
+                        $this->addProvide($provide, $version);
+                    }
+                    break;
+                case 'suggest':
+                    foreach ($values as $suggest => $version) {
+                        $this->addSuggest($suggest, $version);
+                    }
+                    break;
                 case 'repositories':
-                    foreach ($values as $repo => $value) {
-                        if (is_numeric($repo)) {
-                            $repo = $this->getName() . '_' . $repo;
-                        }
-                        $this->addRepository($repo, $value);
+                    foreach ($values as $value) {
+                        $repository = new Repository();
+                        $repository->loadJSONObject($value);
+                        $this->addRepository($repository);
                     }
                     break;
                 case 'scripts':
@@ -946,27 +1178,130 @@ class Accompanist implements JsonSerializable
                 case 'config':
                     $this->setConfig($values);
                     break;
-                case 'autoload':
-                    $this->setAutoload($values);
-                    break;
                 case 'authors':
                     $this->setAuthors($values);
                     break;
                 case 'name':
                     $this->setName($values);
                     break;
-                case 'license':
-                    $this->setLicense($values);
-                    break;
                 case 'description':
                     $this->setDescription($values);
                     break;
+                case 'type':
+                    $this->setType($values);
+                    break;
+                case 'keywords':
+                    foreach ($values as $value) {
+                        $this->addKeyword($value);
+                    }
+                    break;
+                case 'homepage':
+                    $this->setHomepage($values);
+                    break;
+                case 'readme':
+                    $this->setReadme($values);
+                    break;
+                case 'time':
+                    $this->setTime($values);
+                    break;
+                case 'license':
+                    $this->setLicense($values);
+                    break;
+                case 'support':
+                    $this->getSupport()->loadJSONObject($values);
+                    break;
+                case 'autoload':
+                    $this->getAutoload()->loadJSONObject($values);
+                    break;
+                case 'autoload-dev':
+                    $this->getAutoloadDev()->loadJSONObject($values);
+                    break;
                 case 'minimum-stability':
                     $this->setMinimumStability($values);
+                    break;
+                case 'version':
+                    $this->setVersion($values);
                     break;
             }
         }
 
         return $this;
+    }
+
+    public function merge(Accompanist $new_accompanist, $overwrite = false)
+    {
+        if (($this->getName() == '' || $overwrite) && $new_accompanist->getName() != '') {
+            $this->setName($new_accompanist->getName());
+        }
+        if (($this->getDescription() == '' || $overwrite) && $new_accompanist->getDescription() != '') {
+            $this->setDescription($new_accompanist->getDescription());
+        }
+
+        if (($this->getVersion() == '' || $overwrite) && $new_accompanist->getVersion() != '') {
+            $this->setVersion($new_accompanist->getVersion());
+        }
+
+        if (($this->getType() == '' || $overwrite) && $new_accompanist->getType() != '') {
+            $this->setType($new_accompanist->getType());
+        }
+
+        foreach ($new_accompanist->getKeywords() as $keyword) {
+            $this->addKeyword($keyword);
+        }
+
+        if (($this->getHomepage() == '' || $overwrite) && $new_accompanist->getHomepage()) {
+            $this->setHomepage($new_accompanist->getHomepage());
+        }
+
+        if (($this->getReadme() == '' || $overwrite) && $new_accompanist->getReadme()) {
+            $this->setReadme($new_accompanist->getReadme());
+        }
+
+        if (($this->getTime() == '' || $overwrite) && $new_accompanist->getTime()) {
+            $this->setTime($new_accompanist->getTime());
+        }
+
+        // Time should be auto generated only?
+        if (($this->getLicense() == '' || $overwrite) && $new_accompanist->getLicense()) {
+            $this->setLicense($new_accompanist->getLicense());
+        }
+
+        // We could get duplicates, do we care?
+        foreach ($new_accompanist->getAuthors() as $author) {
+            $this->addAuthor($author);
+        }
+
+        $this->mergeSupport($new_accompanist->getSupport(), $overwrite);
+
+        foreach ($new_accompanist->getRequire() as $require => $version) {
+            $this->addRequire($require, $version, $overwrite);
+        }
+
+        foreach ($new_accompanist->getRequireDev() as $require => $version) {
+            $this->addRequireDev($require, $version, $overwrite);
+        }
+
+        foreach ($new_accompanist->getConflict() as $conflict => $version) {
+            $this->addConflict($conflict, $version, $overwrite);
+        }
+
+        foreach ($new_accompanist->getProvide() as $provide => $version) {
+            $this->addProvide($provide, $version, $overwrite);
+        }
+
+        foreach ($new_accompanist->getReplace() as $replace => $version) {
+            $this->addReplace($replace, $version, $overwrite);
+        }
+
+        foreach ($new_accompanist->getSuggest() as $suggest => $version) {
+            $this->addSuggest($suggest, $version, $overwrite);
+        }
+
+        $this->mergeAutoload($new_accompanist->getAutoload(), $overwrite);
+        $this->mergeAutoloadDev($new_accompanist->getAutoloadDev(), $overwrite);
+
+        foreach ($new_accompanist->getRepositories() as $repository) {
+            $this->addRepository($repository);
+        }
     }
 }

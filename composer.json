@@ -9,7 +9,6 @@
             "email": "smccabe@acromediainc.com"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
         "php": "^7.0"
     },
